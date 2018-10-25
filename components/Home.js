@@ -7,44 +7,70 @@ class Home extends Component {
         this.state = {
             blocks: [
                 {   
-                    name:"Module", 
+                    name: 'Module', 
                     attribute: {
-                        bgcolor: "#8decaf", 
-                        child: ["left","right","down"]
+                        bgcolor: '#8decaf', 
+                        child: ['down']
                     },
-                    property: {}
+                    property: {
+                        status: false,
+                        module: [
+                            {'name': 'select1' },
+                            {'name': 'select2' },
+                        ]
+                    }
                 },
                 {
-                    name:"Assessment",                     
+                    name: 'Assessment',                     
                     attribute: {
-                        bgcolor: "#ff7d79", 
-                        child: ["left","right","down"]
+                        bgcolor: '#ff7d79', 
+                        child: ['down']
                     },
-                    property: {}
+                    property: {
+                        status: false,
+                        module: [
+                            {'name': 'select3' },
+                            {'name': 'select4' },
+                        ]
+                    }
                 },
                 {
-                    name:"Simulation",                     
+                    name: 'Simulation',                     
                     attribute: {
-                        bgcolor: "#83ccff", 
-                        child: ["left","right","down"]
+                        bgcolor: '#83ccff', 
+                        child: ['down']
                     },
-                    property: {}
+                    property: {
+                        status: false,
+                        module: [
+                            {'name': 'select5' },
+                            {'name': 'select6' },
+                        ]
+                    }
                 },
                 {
-                    name:"Decision",                    
+                    name: 'Decision',                    
                     attribute: {
-                        bgcolor: "#f5d47c", 
-                        child: ["left","right","down"]
+                        bgcolor: '#f5d47c', 
+                        child: ['right']
                     },
-                    property: {}
+                    property: {
+                    }
                 }
             ],
             workflowConfig:{
-                maxRow: 5,
-                maxCol: 6,
+                maxRow: 10,
+                maxCol: 10,
             },
             workflowData: [
-                /*{name:'Module', row: 0, col: 1},
+                /*{
+                    name:'Module', 
+                    row: 0, 
+                    col: 1, 
+                    property: {
+                        'module': ''
+                    }
+                },
                 {name:'Assessment', row: 2, col: 0}*/
             ],
             workflowDataDraggable: [
@@ -53,20 +79,23 @@ class Home extends Component {
         }
     }
 
+    /* When start to Drag set a Block name as ID */
     onDragStart = (ev, id) => {
+        console.log('onDragStart:',id);
         ev.dataTransfer.setData("id", id);
     }
 
-    setPositionWorkflow = (elem, positionRow, positionCol) => {  
-        let item = {
-            name: elem,
-            row: positionRow,
-            col: positionCol
-        }
+    onDragOver = (ev) => {
+        ev.preventDefault();
+    }
 
-        let workflowData = this.state.workflowData;
-        workflowData.push(item);        
-        
+    /* When is Drop insert the Block */
+    onDrop = (ev, positionRow, positionCol) => {
+        let elem = ev.dataTransfer.getData("id");
+        this.insertBlockToWorkflow(elem,positionRow,positionCol);
+    }
+
+    insertPositionWorkflowDraggable = (elem, positionRow, positionCol) => {
         let workflowDataDraggable = this.state.workflowDataDraggable;
         
         let positionColNext = positionCol+1;
@@ -76,6 +105,7 @@ class Home extends Component {
             col: positionColNext
         }
         workflowDataDraggable.push(itemDraggable);
+
         let positionRowNext = positionRow+1;
         itemDraggable = {
             name: '',
@@ -83,30 +113,41 @@ class Home extends Component {
             col: positionCol
         }
         workflowDataDraggable.push(itemDraggable);
+
+    }
+
+    insertBlockToWorkflow = (elem, positionRow, positionCol) => {
+
+        /* Set a element on the workflow array */
+        let item = {
+            name: elem,
+            row: positionRow,
+            col: positionCol,
+            property: {}
+        }
+        let workflowData = this.state.workflowData;
+        workflowData.push(item);        
+        
+        /* Set a draggable */
+        this.insertPositionWorkflowDraggable(elem, positionRow, positionCol);
+
         this.setState(
             workflowData
         )
     }
 
-    onDragOver = (ev) => {
-        ev.preventDefault();
-    }
-
-    onDrop = (ev, positionRow, positionCol) => {
-        let elem = ev.dataTransfer.getData("id");
-        this.setPositionWorkflow(elem,positionRow,positionCol);
-    }
-
+    /* Get a Block */
     getBlock = (i, j) => {
-        let workflowName = '';
+        let workflowItemName = '';
         this.state.workflowData.forEach((item) => {
             if ((item.row === i)&&(item.col === j)) {
-                workflowName = item.name;
+                workflowItemName = item.name;
             }
         });
-        return workflowName;
+        return workflowItemName;
     }
 
+    /* Get true if a Cell is draggable */
     getDraggable = (i, j) => {
         let itemDraggable = false;
         this.state.workflowDataDraggable.forEach((item) => {
@@ -128,7 +169,7 @@ class Home extends Component {
         return itemResult;
     }
 
-    createTable = () => {
+    createContentTable = () => {
         let table = []
         let itemName = ''
         let itemDraggable = false
@@ -136,8 +177,11 @@ class Home extends Component {
         for (let i = 0; i < this.state.workflowConfig.maxRow; i++) {
             let children = []
             for (let j = 0; j < this.state.workflowConfig.maxCol; j++) {
+                /* Get Block for include in the cell*/
                 itemName = this.getBlock(i,j)
+                /* If is Draggable return true */ 
                 itemDraggable = this.getDraggable(i,j)
+                
                 if(itemName!=='') {
                     blockProperty = this.getBlockProperty(itemName);
                     children.push(<td key={j} style={{backgroundColor: `${blockProperty.attribute.bgcolor}`}}>{itemName}</td>)
@@ -163,11 +207,11 @@ class Home extends Component {
         return table
     }
 
-    drawTable = () => {
+    createTable = () => {
         return(
             <table>
                 <tbody>
-                    {this.createTable()}
+                    {this.createContentTable()}
                 </tbody>
             </table>
         )
@@ -194,10 +238,11 @@ class Home extends Component {
                         }
                     </div>
                     <div className="workflow-wrapper">
-                        <div>{this.drawTable()}</div>
+                        <span className="task-header">WORKFLOW</span>
+                        <div>{this.createTable()}</div>
                     </div>
                     <div className="properties-wrapper">
-                        PROPERTIES
+                        <span className="task-header">PROPERTIES</span>
                     </div>
                 </div>
             </div>
