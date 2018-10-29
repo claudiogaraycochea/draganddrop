@@ -40,7 +40,7 @@ class Home extends Component {
                         bgcolor: '#83ccff', 
                         child: ['down']
                     },
-                    property: {
+                    properlty: {
                         status: false,
                         module: [
                             {'name': 'select5' },
@@ -117,7 +117,6 @@ class Home extends Component {
     }
 
     insertBlockToWorkflow = (elem, positionRow, positionCol) => {
-
         /* Set a element on the workflow array */
         let item = {
             name: elem,
@@ -147,17 +146,6 @@ class Home extends Component {
         return workflowItemName;
     }
 
-    /* Get true if a Cell is draggable */
-    getDraggable = (i, j) => {
-        let itemDraggable = false;
-        this.state.workflowDataDraggable.forEach((item) => {
-            if ((item.row === i)&&(item.col === j)) {
-                itemDraggable = true;
-            }
-        });
-        return itemDraggable;
-    }
-
     getBlockProperty = (itemName) => {
         let itemResult = {name:'',bgcolor:''};
         this.state.blocks.forEach((item) => {
@@ -167,6 +155,17 @@ class Home extends Component {
             }
         });
         return itemResult;
+    }
+
+    /* Get true if a Cell is draggable */
+    getDraggable = (i, j) => {
+        let itemDraggable = false;
+        this.state.workflowDataDraggable.forEach((item) => {
+            if ((item.row === i)&&(item.col === j)) {
+                itemDraggable = true;
+            }
+        });
+        return itemDraggable;
     }
 
     createContentTable = () => {
