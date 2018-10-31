@@ -9,11 +9,11 @@ class Home extends Component {
                 {   
                     name: 'Module', 
                     attribute: {
-                        bgcolor: '#8decaf', 
-                        child: ['down']
+                        bgcolor: '#8decaf',
                     },
                     property: {
                         status: false,
+                        childDirection: ['down'],
                         module: [
                             {'name': 'select1' },
                             {'name': 'select2' },
@@ -23,11 +23,11 @@ class Home extends Component {
                 {
                     name: 'Assessment',                     
                     attribute: {
-                        bgcolor: '#ff7d79', 
-                        child: ['down']
+                        bgcolor: '#ff7d79',
                     },
                     property: {
                         status: false,
+                        childDirection: ['down'],
                         module: [
                             {'name': 'select3' },
                             {'name': 'select4' },
@@ -37,11 +37,11 @@ class Home extends Component {
                 {
                     name: 'Simulation',                     
                     attribute: {
-                        bgcolor: '#83ccff', 
-                        child: ['down']
+                        bgcolor: '#83ccff',
                     },
-                    properlty: {
+                    property: {
                         status: false,
+                        childDirection: ['down'],
                         module: [
                             {'name': 'select5' },
                             {'name': 'select6' },
@@ -51,10 +51,10 @@ class Home extends Component {
                 {
                     name: 'Decision',                    
                     attribute: {
-                        bgcolor: '#f5d47c', 
-                        child: ['right']
+                        bgcolor: '#f5d47c',
                     },
                     property: {
+                        childDirection: ['left']
                     }
                 }
             ],
@@ -91,21 +91,13 @@ class Home extends Component {
 
     /* When is Drop insert the Block */
     onDrop = (ev, positionRow, positionCol) => {
-        let elem = ev.dataTransfer.getData("id");
-        this.insertBlockToWorkflow(elem,positionRow,positionCol);
+        let elemId = ev.dataTransfer.getData("id");
+        this.insertBlockToWorkflow(elemId,positionRow,positionCol);
     }
 
-    insertPositionWorkflowDraggable = (elem, positionRow, positionCol) => {
+    insertPositionWorkflowDraggableLeft = (positionRow, positionCol) => {
         let workflowDataDraggable = this.state.workflowDataDraggable;
-        
-        let positionColNext = positionCol+1;
-        let itemDraggable = {
-            name: '',
-            row: positionRow,
-            col: positionColNext
-        }
-        workflowDataDraggable.push(itemDraggable);
-
+        let itemDraggable = {};
         let positionRowNext = positionRow+1;
         itemDraggable = {
             name: '',
@@ -113,22 +105,66 @@ class Home extends Component {
             col: positionCol
         }
         workflowDataDraggable.push(itemDraggable);
-
     }
 
-    insertBlockToWorkflow = (elem, positionRow, positionCol) => {
+    insertPositionWorkflowDraggableHaveDecision = (positionRow, positionCol) => {
+        /* Verify if the Row have Decision */
+        let workflowData = this.state.workflowData;
+        let result = false;
+        workflowData.forEach((item) => {
+            if(item.name==='Decision'){
+                result = true;
+            }
+        });
+        return result;
+    }
+
+    insertPositionWorkflowDraggableDown = (positionRow, positionCol) => {
+        let workflowDataDraggable = this.state.workflowDataDraggable;
+        let itemDraggable = {};
+        let positionColNext = positionCol+1;
+
+        itemDraggable = {
+            name: '',
+            row: positionRow,
+            col: positionColNext
+        }
+        workflowDataDraggable.push(itemDraggable);
+
+        if(this.insertPositionWorkflowDraggableHaveDecision(positionRow, positionCol)===true) {
+            this.insertPositionWorkflowDraggableLeft(positionRow, positionCol);
+        }
+    }
+
+    insertPositionWorkflowDraggable = (elemId, positionRow, positionCol) => {
+        let itemBlock = this.getBlockProperty(elemId);
+        
+        itemBlock.property.childDirection.forEach((item) => {
+            if(item==='left'){
+                this.insertPositionWorkflowDraggableLeft(positionRow,positionCol);
+            }
+            if(item==='down') {
+                this.insertPositionWorkflowDraggableDown(positionRow,positionCol);
+            }
+        });
+    }
+
+    insertBlockToWorkflow = (elemId, positionRow, positionCol) => {
+        let workflowData = this.state.workflowData;
+        let count = workflowData.length+1;
         /* Set a element on the workflow array */
         let item = {
-            name: elem,
+            id: count,
+            name: elemId,
             row: positionRow,
             col: positionCol,
             property: {}
         }
-        let workflowData = this.state.workflowData;
+
         workflowData.push(item);        
         
         /* Set a draggable */
-        this.insertPositionWorkflowDraggable(elem, positionRow, positionCol);
+        this.insertPositionWorkflowDraggable(elemId, positionRow, positionCol);
 
         this.setState(
             workflowData
@@ -136,11 +172,12 @@ class Home extends Component {
     }
 
     /* Get a Block */
-    getBlock = (i, j) => {
+    getWorkflowItemByPosition = (i, j) => {
         let workflowItemName = '';
         this.state.workflowData.forEach((item) => {
             if ((item.row === i)&&(item.col === j)) {
                 workflowItemName = item.name;
+                console.log('*************getBlock:',item);
             }
         });
         return workflowItemName;
@@ -150,7 +187,7 @@ class Home extends Component {
         let itemResult = {name:'',bgcolor:''};
         this.state.blocks.forEach((item) => {
             if (item.name === itemName) {
-                console.log(item.attribute.bgcolor)
+                //console.log(item.attribute.bgcolor)
                 itemResult=item
             }
         });
@@ -177,13 +214,14 @@ class Home extends Component {
             let children = []
             for (let j = 0; j < this.state.workflowConfig.maxCol; j++) {
                 /* Get Block for include in the cell*/
-                itemName = this.getBlock(i,j)
+                itemName = this.getWorkflowItemByPosition(i,j)
                 /* If is Draggable return true */ 
                 itemDraggable = this.getDraggable(i,j)
                 
                 if(itemName!=='') {
                     blockProperty = this.getBlockProperty(itemName);
-                    children.push(<td key={j} style={{backgroundColor: `${blockProperty.attribute.bgcolor}`}}>{itemName}</td>)
+                    console.log(blockProperty);
+                    children.push(<td key={j} draggable style={{backgroundColor: `${blockProperty.attribute.bgcolor}`}}>{itemName}</td>)
                 }
                 else {
                     if (itemDraggable===true) {
