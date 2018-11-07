@@ -1,0 +1,121 @@
+[
+  {
+    "onRun": [
+      {
+        "endpoint": "https://jsonplaceholder.typicode.com/posts",
+        "action": "POST"
+      }
+    ],
+    "type": "MODULE",
+    "root": true,
+    "last": false,
+    "nextNodesOnSuccess": [
+      {
+        "conditions": [],
+        "nextNodeId": 1
+      }
+    ],
+    "id": 0,
+    "name": "greetings",
+    "description": "module"
+  },
+  {
+    "onRun": [
+      {
+        "endpoint": "https://jsonplaceholder.typicode.com/posts",
+        "action": "POST"
+      }
+    ],
+    "type": "MODULE",
+    "root": false,
+    "last": true,
+    "nextNodesOnSuccess": [],
+    "id": 1,
+    "name": "end",
+    "description": "module"
+  }
+]
+
+/*************************
+
+[
+  {
+    "onRun": [],
+    "type": "MODULE",
+    "root": true,
+    "last": false,
+    "nextNodesOnSuccess": [
+      {
+        "conditions": [],
+        "nextNodeId": 2
+      }
+    ],
+    "id": 1,
+    "name": "5b3685c961668b1243dc1493",
+    "description": "module",
+    "type_id": "5b3685c961668b1243dc1493",
+    "subType": "greetings"
+  },
+  {
+    "onRun": [],
+    "type": "ASSESSMENT",
+    "root": false,
+    "last": false,
+    "nextNodesOnSuccess": [
+      {
+        "conditions": [],
+        "nextNodeId": 3
+      }
+    ],
+    "id": 2,
+    "name": "5ace65e1539ec1619dcc48e7",
+    "description": "assessment",
+    "type_id": "5ace65e1539ec1619dcc48e7",
+    "subType": "assessment"
+  },
+  {
+    "onRun": [],
+    "type": "MODULE",
+    "root": false,
+    "last": true,
+    "nextNodesOnSuccess": [],
+    "id": 3,
+    "name": "5b59da2ee7cca06197a166f2",
+    "description": "module",
+    "type_id": "5b59da2ee7cca06197a166f2",
+    "subType": "end"
+  }
+]
+
+///**************************
+[
+  {
+    "onRun": [],
+    "type": "MODULE",
+    "root": true,
+    "last": false,
+    "nextNodesOnSuccess": [
+      {
+        "conditions": [],
+        "nextNodeId": 2
+      }
+    ],
+    "id": 1,
+    "name": "5b3685c961668b1243dc1493",
+    "description": "module",
+    "type_id": "5b3685c961668b1243dc1493",
+    "subType": "greetings"
+  },
+  {
+    "onRun": [],
+    "type": "MODULE",
+    "root": false,
+    "last": true,
+    "nextNodesOnSuccess": [],
+    "id": 2,
+    "name": "5b59da2ee7cca06197a166f2",
+    "description": "module",
+    "type_id": "5b59da2ee7cca06197a166f2",
+    "subType": "end"
+  }
+]
