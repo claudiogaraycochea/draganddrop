@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import './WorkflowTemplateEditor.css';
+import WorkflowProperties from './WorkflowProperties';
 
-class Properties extends Component {
+/*class Properties extends Component {
     
     render(){
         const props = this.props.workflowItem;
@@ -9,7 +10,7 @@ class Properties extends Component {
             props.workflowItem
         }</div>);
     };
-}
+}*/
 
 class WorkflowTemplateEditor extends Component {
     constructor(props) {
@@ -69,8 +70,8 @@ class WorkflowTemplateEditor extends Component {
                 }
             ],
             workflowConfig:{
-                maxRow: 10,
-                maxCol: 10,
+                maxRow: 50,
+                maxCol: 50,
             },
             workflowData: [
                 /*{
@@ -106,34 +107,38 @@ class WorkflowTemplateEditor extends Component {
 
     componentDidMount(){
         let workflowData = this.state.workflowData;
-        let count = 0;
-        let nodes = this.props.nodes;
-        let i = 0;            
+        //let count = 0;
+        let nodes = this.props.workflow.modelUI.workflowData;
+        console.log(workflowData);
+        let workflow = this.props.workflow;
+        console.log(workflow);
+        let i = 0;
         let elemId = 'Module';
         let positionRow = 0;
         let positionCol = 0;
         nodes.forEach((nodeItem)=>{
-            count = workflowData.length+1;
+            //count = workflowData.length+1;
             let item = {
-                id: count,
-                name: elemId,
-                row: positionRow,
-                col: positionCol,
+                id: nodeItem.id,
+                name: nodeItem.name,
+                row: nodeItem.row,
+                col: nodeItem.col,
                 property: {},
-                node: nodeItem,
+                node: {},
             }
             workflowData.push(item); 
             i++;
             positionRow=i;
         });
         positionRow--;
+        
         this.insertPositionWorkflowDraggable(elemId, positionRow, positionCol);
 
         this.setState(
             workflowData
         )
     }
-  
+
     /* When start to Drag set a Block name as ID */
     onDragStart = (ev, id) => {
         console.log('onDragStart:',id);
@@ -309,7 +314,7 @@ class WorkflowTemplateEditor extends Component {
                             style={{backgroundColor: `${blockProperty.attribute.bgcolor}`}} 
                             workflowid={workflowItem.id}
                             onClick={()=>{this.getWorkflowProperty(workflowItemId)}}>
-                            {workflowItem.name}(elem {workflowItem.row} {workflowItem.col}) (m{tableRow} {tableCol})
+                            {workflowItem.name}
                         </td>)
                 }
                 else {
@@ -319,12 +324,12 @@ class WorkflowTemplateEditor extends Component {
                                 onDragOver={(e)=>this.onDragOver(e)}
                                 onDrop={(e)=>{this.onDrop(e, tableRow, tableCol)}}
                             >
-                                <div className="itemDraggable">Draggable (m {tableRow} {tableCol})</div> 
+                                <div className="itemDraggable">Draggable</div> 
                             </td>
                         )
                     }
                     else {
-                        children.push(<td key={j}>(m {tableRow} {tableCol})</td>)
+                        children.push(<td key={j}></td>)
                     }
                 }
             }
@@ -341,6 +346,13 @@ class WorkflowTemplateEditor extends Component {
                 </tbody>
             </table>
         )
+    }
+
+    saveWorkflow = () => {
+        console.log('********** save workflow');
+        let workflow = this.props.workflow;
+        workflow.modelUI.workflowData=this.state.workflowData;
+        console.log(workflow);
     }
 
     render() {
@@ -373,7 +385,18 @@ class WorkflowTemplateEditor extends Component {
                                 <option>Test</option>
                             </select>
                         </div>
-                        <div>{this.state.workflowItemSelectedId}<Properties workflowItem={this.state.workflowItemSelectedId} ></Properties></div>
+                        <div>
+                            {this.state.workflowItemSelectedId}
+                            <WorkflowProperties 
+                                workflowItem={this.state.workflowItemSelectedId}
+                                //saveWorkflow={saveWorkflow}
+                                >
+                            </WorkflowProperties>
+                            {/*<Properties workflowItem={this.state.workflowItemSelectedId} ></Properties>*/}
+                        </div>
+                        <div>
+                            <button onClick={()=>{this.saveWorkflow()}}>Save Workflow</button>
+                        </div>
                     </div>
                 </div>
             </div>
