@@ -3,50 +3,81 @@ import './Home.css';
 import WorkflowTemplateEditor from './workflowTemplateEditor/WorkflowTemplateEditor';
 
 class Home extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
+  constructor(props) {
+  	super(props);
+  	this.state = {
+			workflowObj : {
+				"type": "TEMPLATE",
+				"active": true,
+				"_id": "5b642b88a5c66cc9e9db8b47",
+				"code": "test2",
+				"name": "RomaTestWorkflowTemplate2",
+				"description": "RomaTestWorkflowTemplate2Description",
+				"createdBy": "Roman",
+				"modelUI": {
+					"id": 'afb3ca99-fc18-4bb1-bc13-66e37090b3b9',
+					"workflowData": [
+					/*	{
+							id: '1',
+							name: 'Message Block',
+							attribute: {
+								bgcolor: '#a6de89',
+							},
+							position: {
+								row: 0,
+								col: 0,
+							},
+							childDirection: 'down',
+							properties: [{
+								name: 'type',
+								value:[
+									{
+										id: 0,
+										name: 'greetings',
+									},
+									{
+										id: 1,
+										name: 'end' 
+									}
+								],
+								selected: '1'
+							}]
+						},
+						{
+							id: '1',
+							name: 'Message Block',
+							attribute: {
+								bgcolor: '#a6de89',
+							},
+							position: {
+								row: 1,
+								col: 0,
+							},
+							childDirection: 'down',
+							properties: [{
+								name: 'type',
+								value:[
+									{
+										id: 0,
+										name: 'greetings',
+									},
+									{
+										id: 1,
+										name: 'end' 
+									}
+								],
+								selected: '1'
+							}]
+						},*/
+					],
+				},
+				"nodes": "",
+				"createdAt": "2018-08-03T10:16:40.211Z",
+				"updatedAt": "2018-08-24T17:40:07.907Z",
+				"__v": 0
+			},
 
-          workflowObj : {
-            "type": "TEMPLATE",
-            "active": true,
-            "_id": "5b642b88a5c66cc9e9db8b47",
-            "code": "test2",
-            "name": "RomaTestWorkflowTemplate2",
-            "description": "RomaTestWorkflowTemplate2Description",
-            "createdBy": "Roman",
-            "modelUI": {
-              "id": 'afb3ca99-fc18-4bb1-bc13-66e37090b3b9',
-              "workflowData": [
-                {
-                  "id": '1',
-                  "name":'Module', 
-                  "row": 0, 
-                  "col": 0, 
-                  "property": {
-                    "module": ""
-                  },
-                  "node": {}
-                },
-                {
-                  "id": '2',
-                  "name":'Assessment', 
-                  "row": 1, 
-                  "col": 0, 
-                  "property": {
-                    "module": ""
-                  },
-                  "node": {}
-                },
-              ],
-            },
-            "nodes": "",
-            "createdAt": "2018-08-03T10:16:40.211Z",
-            "updatedAt": "2018-08-24T17:40:07.907Z",
-            "__v": 0
-          },
-         
-/*         
+/*
             nodes: [
                 {
                   "onRun": [],
@@ -95,19 +126,19 @@ class Home extends Component {
                   "subType": "end"
                 }
             ]*/
-        }
     }
+  }
 
-    render() {
-        //const workflowNodes = this.state.nodes;
-        const workflow = this.state.workflowObj;
-        return (
-            <div>
-                <h2 className="header">NEW WORKFLOW TEMPLATE</h2> 
-                <WorkflowTemplateEditor workflow={workflow}></WorkflowTemplateEditor>
-            </div>
-        );
-    }
+	render() {
+		//const workflowNodes = this.state.nodes;
+		const workflow = this.state.workflowObj;
+		return (
+			<div>
+				<h2 className="header">NEW WORKFLOW TEMPLATE</h2>
+				<WorkflowTemplateEditor workflow={workflow}></WorkflowTemplateEditor>
+			</div>
+		);
+	}
 }
 
 export default Home;
