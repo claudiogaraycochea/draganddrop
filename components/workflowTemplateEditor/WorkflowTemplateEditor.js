@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './WorkflowTemplateEditor.css';
 import WorkflowProperties from './WorkflowProperties';
-
 /*class Properties extends Component {
 	
 	render(){
@@ -100,9 +99,7 @@ class WorkflowTemplateEditor extends Component {
 				maxRow: 20,
 				maxCol: 20,
 			},
-			workflowData: [
-				// Arraw block objects
-			],
+			workflowData: [],
 			workflowDataDraggable: [],
 			workflowItemSelectedId: 0
 		}
@@ -154,7 +151,7 @@ class WorkflowTemplateEditor extends Component {
 	}
 
 	buildWorkflowDraggableAreas = (workflowData) => {
-		let workflowDataDraggable = [];
+		let workflowDataDraggable = this.state.workflowDataDraggable;
 		workflowData.forEach((item) => {
 			if(item.childDirection==='left'){
 				if(this.isWorkflowPostionEmpty(workflowData, (item.position.row+1), item.position.col)){
