@@ -112,16 +112,10 @@ class WorkflowTemplateEditor extends Component {
 		let workflowData = this.state.workflowData;
 		let nodes = this.props.workflow.modelUI.workflowData;
 		let workflowDataDraggable = [];
-		//let workflow = this.props.workflow; // get the properties from workflow
 		nodes.forEach((nodeItem)=>{
 			workflowData.push(nodeItem);
 		});
-		//workflowDataDraggable = this.buildWorkflowDraggableAreas(workflowData);
-		workflowDataDraggable = async function (){
-			await this.buildWorkflowDraggableAreas(workflowData);
-		}
-		
-		console.log('workflowDataDraggable:',workflowDataDraggable);
+		workflowDataDraggable = this.buildWorkflowDraggableAreas(workflowData);
 		this.setState({
 			workflowData,
 			workflowDataDraggable			
@@ -180,10 +174,16 @@ class WorkflowTemplateEditor extends Component {
 						col: item.position.col
 					};
 					workflowDataDraggable.push(itemDraggable);
+					if(this.positionWorkflowDraggableHaveDecision(item.position.row, item.position.col)===true) {
+						itemDraggable = {
+							row: item.position.row,
+							col: (item.position.col+1)
+						};
+						workflowDataDraggable.push(itemDraggable);
+					}
 				}
 			}
 		});
-		console.log('buildWorkflowDraggableAreas', workflowDataDraggable);
 		if (workflowData.length===0) {
 			let itemDraggable = {};
 			itemDraggable = {
@@ -194,23 +194,6 @@ class WorkflowTemplateEditor extends Component {
 		}
 		return workflowDataDraggable;
 	}
-	/* Insert a position Draggable 1 cell down & do a exception with Decision */
-/*	insertPositionWorkflowDraggableDown = (positionRow, positionCol) => {
-		let workflowDataDraggable = this.state.workflowDataDraggable;
-		let itemDraggable = {};
-		let positionRowNext = positionRow+1;
-
-		itemDraggable = {
-			name: '',
-			row: positionRowNext,
-			col: positionCol
-		}
-		workflowDataDraggable.push(itemDraggable);
-
-		if(this.positionWorkflowDraggableHaveDecision(positionRow, positionCol)===true) {
-			this.insertPositionWorkflowDraggableLeft(positionRow, positionCol);
-		}
-	}*/
 
 	/* Verify if the position have Decision */
 	positionWorkflowDraggableHaveDecision = (positionRow, positionCol) => {
@@ -218,7 +201,7 @@ class WorkflowTemplateEditor extends Component {
 		let workflowData = this.state.workflowData;
 		let result = false;
 		workflowData.forEach((item) => {
-			if(positionRow===item.row) {
+			if(positionRow===item.position.row) {
 				if(item.name==='Decision'){
 					result = true;
 				}
@@ -235,7 +218,6 @@ class WorkflowTemplateEditor extends Component {
 
 		/* Set a element on the workflow array */
 		let item = this.getBlock(blockId);
-		console.log('getBlock>>>>>>>>>>>>(no changes):',item);
 		let obj = {
 			id: count.toString(),
 			name: item.name,
@@ -251,16 +233,8 @@ class WorkflowTemplateEditor extends Component {
 				selected: '1'
 			}]
 		}
-		console.log('getBlock>>>>>>>>>>>> changes:',obj);
 		workflowData.push(obj);
-		console.log('workflowData',workflowData);
-		/* Set a draggable */
-		/*workflowDataDraggable = async function (){
-			await this.buildWorkflowDraggableAreas(workflowData);
-		}*/
 		workflowDataDraggable = this.buildWorkflowDraggableAreas(workflowData);
-		console.log('workflowDataDraggable:',workflowDataDraggable);
-		console.log('workflowData: Insert > ',workflowData);
 		this.setState({
 			workflowData,
 			workflowDataDraggable			
@@ -280,23 +254,8 @@ class WorkflowTemplateEditor extends Component {
 
 	/* Get a property from a Block */
 	getBlock = (blockId) => {
-		//let blocks = JSON.parse(JSON.stringify(this.state.blocks));
-		//const { blocks } = this.state;
-	
 		let blocks = this.state.blocks;
 		let itemResult = {};
-
-		/*
-		for(let i=0; i<blocks.length; i++){
-			console.log(blocks[i].id);
-			if (blocks[i].id === blockId) {
-				//return blocks[i];
-				console.log(blocks[i]);
-				itemResult = blocks[i];
-				return itemResult;
-			}
-		}*/
-
 		blocks.forEach((item) => {
 			if (item.id === blockId) {
 				itemResult = item;
@@ -344,7 +303,6 @@ class WorkflowTemplateEditor extends Component {
 				
 				/* If is Draggable return true */ 
 				itemDraggable = this.getDraggable(tableRow,tableCol)
-				console.log('%%%%%%%',itemDraggable);
 				if(workflowItem.name !== undefined) {
 					let workflowItemId = workflowItem.id;
 					children.push(
