@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './WorkflowTemplateEditor.css';
 import WorkflowProperties from './WorkflowProperties';
-
 /*class Properties extends Component {
 	
 	render(){
@@ -100,9 +99,7 @@ class WorkflowTemplateEditor extends Component {
 				maxRow: 20,
 				maxCol: 20,
 			},
-			workflowData: [
-				// Arraw block objects
-			],
+			workflowData: [],
 			workflowDataDraggable: [],
 			workflowItemSelectedId: 0
 		}
@@ -154,7 +151,7 @@ class WorkflowTemplateEditor extends Component {
 	}
 
 	buildWorkflowDraggableAreas = (workflowData) => {
-		let workflowDataDraggable = [];
+		let workflowDataDraggable = this.state.workflowDataDraggable;
 		workflowData.forEach((item) => {
 			if(item.childDirection==='left'){
 				if(this.isWorkflowPostionEmpty(workflowData, (item.position.row+1), item.position.col)){
@@ -197,7 +194,6 @@ class WorkflowTemplateEditor extends Component {
 
 	/* Verify if the position have Decision */
 	positionWorkflowDraggableHaveDecision = (positionRow, positionCol) => {
-		/* Verify if the Row have Decision */
 		let workflowData = this.state.workflowData;
 		let result = false;
 		workflowData.forEach((item) => {
@@ -215,8 +211,6 @@ class WorkflowTemplateEditor extends Component {
 		let workflowData = this.state.workflowData;
 		let workflowDataDraggable = [];
 		let count = workflowData.length+1;
-
-		/* Set a element on the workflow array */
 		let item = this.getBlock(blockId);
 		let obj = {
 			id: count.toString(),
@@ -227,11 +221,7 @@ class WorkflowTemplateEditor extends Component {
 				col: col,
 			},
 			childDirection: item.childDirection,
-			properties: [{
-				name: item.properties.name,
-				value: item.properties.value,
-				selected: '1'
-			}]
+			properties: item.properties,
 		}
 		workflowData.push(obj);
 		workflowDataDraggable = this.buildWorkflowDraggableAreas(workflowData);
@@ -261,7 +251,6 @@ class WorkflowTemplateEditor extends Component {
 				itemResult = item;
 			}
 		});
-		console.log('fuera del for');
 		return itemResult;
 	}
 
@@ -277,12 +266,25 @@ class WorkflowTemplateEditor extends Component {
 	}
 
 	/* Get a property from a Workflow */
-	getWorkflowProperty = (workflowItemId) => {
-		console.log('getWorkflowItem', workflowItemId);
+	setWorkflowItemSelectedId = (workflowItemId) => {
 		let workflowItemSelectedId = workflowItemId;
 		this.setState({
 			workflowItemSelectedId,
 		});
+	}
+
+	getWorkflowItemProperties = () => {
+		let workflowItemSelectedId = this.state.workflowItemSelectedId;
+		let workflowItem = {};
+		if(workflowItemSelectedId>0){
+			this.state.workflowData.forEach((item) => {
+				if (item.id === workflowItemSelectedId) {
+					workflowItem = item;
+				}
+			});
+			return workflowItem;			
+		}
+		return '';
 	}
 
 	/* 
@@ -309,7 +311,7 @@ class WorkflowTemplateEditor extends Component {
 						<td 
 							key={j}
 							style={{backgroundColor: `${workflowItem.attribute.bgcolor}`}} 
-							onClick={()=>{this.getWorkflowProperty(workflowItemId)}}>
+							onClick={()=>{this.setWorkflowItemSelectedId(workflowItemId)}}>
 							{workflowItem.name}
 						</td>)
 				}
@@ -378,14 +380,9 @@ class WorkflowTemplateEditor extends Component {
 					<div className="properties-wrapper">
 						<span className="task-header">PROPERTIES</span>
 						<div>
-							<select>
-								<option>Test</option>
-							</select>
-						</div>
-						<div>
-							{this.state.workflowItemSelectedId}
 							<WorkflowProperties 
-								workflowItem={this.state.workflowItemSelectedId}
+								workflowItemId={this.state.workflowItemSelectedId}
+								workflowItem = {this.getWorkflowItemProperties()}
 								//saveWorkflow={saveWorkflow}
 								>
 							</WorkflowProperties>

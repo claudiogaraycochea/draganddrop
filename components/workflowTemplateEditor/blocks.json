@@ -1,0 +1,85 @@
+var DataJSON = {    
+	blocks: [
+		{
+			id: '1',
+			name: 'Message Block',
+			attribute: {
+				bgcolor: '#a6de89',
+			},
+			position: {
+				row: '',
+				col: '',
+			},
+			childDirection: 'down',
+			properties: [{
+				name: 'type',
+				value:[
+					{
+						id: 0,
+						name: 'greetings',
+					},
+					{
+						id: 1,
+						name: 'end' 
+					}
+				],
+				selected: '1'
+			}]
+		},
+		{
+			id: '2',
+			name: 'Assessment',
+			attribute: {
+				bgcolor: '#ff7d79',
+			},
+			position: {
+				row: '',
+				col: '',
+			},
+			childDirection: 'down',
+			properties: [{
+				name: 'type',
+				value:[
+					{
+						id: 0,
+						name: 'greetings',
+					},
+					{
+						id: 1,
+						name: 'end' 
+					}
+				],
+				selected: '',
+			}]
+		},
+		{
+			id: '3',
+			name: 'Decision',
+			attribute: {
+				bgcolor: '#fbd15b',
+			},
+			position: {
+				row: '',
+				col: '',
+			},
+			childDirection: 'left',
+			properties: [{
+				name: 'type',
+				value:[
+					{
+						id: 0,
+						name: 'greetings',
+					},
+					{
+						id: 1,
+						name: 'end' 
+					}
+				],
+				selected: '',
+			}]
+		}
+	],
+}
+
+export default DataJSON
+

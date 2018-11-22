@@ -17,7 +17,7 @@ class Home extends Component {
 				"modelUI": {
 					"id": 'afb3ca99-fc18-4bb1-bc13-66e37090b3b9',
 					"workflowData": [
-					/*	{
+						{
 							id: '1',
 							name: 'Message Block',
 							attribute: {
@@ -44,7 +44,7 @@ class Home extends Component {
 							}]
 						},
 						{
-							id: '1',
+							id: '2',
 							name: 'Message Block',
 							attribute: {
 								bgcolor: '#a6de89',
@@ -68,7 +68,7 @@ class Home extends Component {
 								],
 								selected: '1'
 							}]
-						},*/
+						},
 					],
 				},
 				"nodes": "",
