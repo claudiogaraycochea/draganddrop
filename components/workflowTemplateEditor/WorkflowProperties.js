@@ -4,38 +4,42 @@ class WorkflowProperties extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-		}
-		this.handleOnChange = this.handleOnChange.bind(this);
+			workflowItem: {},
+			selectedItem: '0'
+		};
+		this.handleChange = this.handleChange.bind(this);
 	}
 
-  handleOnChange(event, data) {
-    /*let { form, valid } = this.state;
-    form[data.name] = data.value;
-    if(!_.isEmpty(data.value)) valid[data.name] = false;
-    this.setState({
-      form, valid
-    });*/
+	handleChange(event) {
+		this.props.onSetWorkflowProperties(event.target.value);
+		this.setState({ selectedItem: event.target.value });
 	}
 
 	getPropertiesValueSelect = (propertiesSelect) => {
-		let children = [];
-		if (propertiesSelect!== undefined) {
-			let arrayValues = propertiesSelect[0].value;
-			arrayValues.forEach(element => {
-				children.push(<option key={element.id}>{element.name}</option>);
-			});
-			return (<select 
-				onClick={this.getPropertiesValueSelected}>{children}
-				</select>)
+		if (propertiesSelect !== undefined) {
+			let arrayValues = propertiesSelect[0].value
+			//let selectedItem = propertiesSelect[0].selected
+			const listItems = arrayValues.map((element) =>
+				<option key={element.id} value={element.id} selected={true}>
+					{element.name}
+				</option>
+			);
+			return (
+				<select
+					defaultValue={this.state.value}
+					onChange={this.handleChange}
+				>
+					{listItems}
+				</select>
+			);
 		}
 	}
 
-	render(){
+	render() {
 		const workflowItem = this.props.workflowItem;
 		const propertiesValues = workflowItem.properties;
-		console.log('PROPERTIES',propertiesValues);
-		
-		return (<div>
+		return (
+			<div>
 				<div>Name:{workflowItem.name}</div>
 				<div>
 					{this.getPropertiesValueSelect(propertiesValues)}
