@@ -37,9 +37,13 @@ class WorkflowTemplateEditor extends Component {
 							{
 								id: 1,
 								name: 'end' 
+							},
+							{
+								id: 2,
+								name: 'empty' 
 							}
 						],
-						selected: '1'
+						selected: '2'
 					}]
 				},
 				{
@@ -65,7 +69,7 @@ class WorkflowTemplateEditor extends Component {
 								name: 'end' 
 							}
 						],
-						selected: '',
+						selected: '0',
 					}]
 				},
 				{
@@ -103,6 +107,20 @@ class WorkflowTemplateEditor extends Component {
 			workflowDataDraggable: [],
 			workflowItemSelectedId: 0
 		}
+
+	}
+
+    setWorkflowItemProperties = (value) => {
+		const workflowData = this.state.workflowData;
+		workflowData.forEach((item)=>{
+			if(item.id===this.state.workflowItemSelectedId){
+				item.properties[0].selected = value;
+				console.log('WORKFLOW DATA: ',item);
+			}
+		});
+		this.setState({
+			workflowData
+		})
 	}
 
 	componentDidMount(){
@@ -383,6 +401,7 @@ class WorkflowTemplateEditor extends Component {
 							<WorkflowProperties 
 								workflowItemId={this.state.workflowItemSelectedId}
 								workflowItem = {this.getWorkflowItemProperties()}
+								onSetWorkflowProperties={this.setWorkflowItemProperties}
 								//saveWorkflow={saveWorkflow}
 								>
 							</WorkflowProperties>
