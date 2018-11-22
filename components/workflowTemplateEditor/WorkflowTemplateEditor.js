@@ -1,15 +1,6 @@
 import React, { Component } from 'react';
 import './WorkflowTemplateEditor.css';
 import WorkflowProperties from './WorkflowProperties';
-/*class Properties extends Component {
-	
-	render(){
-		const props = this.props.workflowItem;
-		return (<div>Item{
-			props.workflowItem
-		}</div>);
-	};
-}*/
 
 class WorkflowTemplateEditor extends Component {
   	constructor(props) {
@@ -115,7 +106,6 @@ class WorkflowTemplateEditor extends Component {
 		workflowData.forEach((item)=>{
 			if(item.id===this.state.workflowItemSelectedId){
 				item.properties[0].selected = value;
-				console.log('WORKFLOW DATA: ',item);
 			}
 		});
 		this.setState({
@@ -139,7 +129,6 @@ class WorkflowTemplateEditor extends Component {
 
 	/* When start to Drag set a Block name as ID */
 	onDragStart = (ev, blockId) => {
-		console.log('onDragStart:',blockId);
 		ev.dataTransfer.setData("blockId", blockId);
 	}
 
@@ -150,7 +139,6 @@ class WorkflowTemplateEditor extends Component {
 	/* When is Drop insert the Block */
 	onDrop = (ev, row, col) => {
 		let blockId = ev.dataTransfer.getData("blockId");
-		console.log('onDrop: ',blockId);
 		this.insertBlockToWorkflow(blockId,row,col);
 	}
 
@@ -365,11 +353,9 @@ class WorkflowTemplateEditor extends Component {
 	}
 
 	saveWorkflow = () => {
-		console.log('********** save workflow');
 		let workflow = this.props.workflow;
 		workflow.modelUI.workflowData=this.state.workflowData;
-		console.log(workflow);
-		console.log('>>>>>>>>>', this.state.workflowDataDraggable);
+		console.log('********** save workflow ',workflow);
 	}
 
 	render() {
@@ -402,10 +388,8 @@ class WorkflowTemplateEditor extends Component {
 								workflowItemId={this.state.workflowItemSelectedId}
 								workflowItem = {this.getWorkflowItemProperties()}
 								onSetWorkflowProperties={this.setWorkflowItemProperties}
-								//saveWorkflow={saveWorkflow}
 								>
 							</WorkflowProperties>
-							{/*<Properties workflowItem={this.state.workflowItemSelectedId} ></Properties>*/}
 						</div>
 						<div>
 							<button onClick={()=>{this.saveWorkflow()}}>Save Workflow</button>
