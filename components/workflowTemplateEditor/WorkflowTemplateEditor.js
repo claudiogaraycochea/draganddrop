@@ -9,7 +9,7 @@ class WorkflowTemplateEditor extends Component {
 			blocks: [
 				{
 					id: '1',
-					name: 'Message Block',
+					name: 'Message',
 					attribute: {
 						bgcolor: '#a6de89',
 					},
@@ -29,12 +29,8 @@ class WorkflowTemplateEditor extends Component {
 								id: 1,
 								name: 'end' 
 							},
-							{
-								id: 2,
-								name: 'empty' 
-							}
 						],
-						selected: '2'
+						selected: '1'
 					}]
 				},
 				{
@@ -53,11 +49,15 @@ class WorkflowTemplateEditor extends Component {
 						value:[
 							{
 								id: 0,
-								name: 'greetings',
+								name: 'static',
 							},
 							{
 								id: 1,
-								name: 'end' 
+								name: 'simulation' 
+							},
+							{
+								id: 2,
+								name: 'adaptive'
 							}
 						],
 						selected: '0',
@@ -98,19 +98,38 @@ class WorkflowTemplateEditor extends Component {
 			workflowDataDraggable: [],
 			workflowItemSelectedId: 0
 		}
-
+		this.handleSave = this.handleSave.bind(this);
 	}
 
     setWorkflowItemProperties = (value) => {
-		const workflowData = this.state.workflowData;
-		workflowData.forEach((item)=>{
-			if(item.id===this.state.workflowItemSelectedId){
-				item.properties[0].selected = value;
+		/*let workflowData = this.state.workflowData;
+		for(let i=0; i<workflowData.length; i++){
+			if(workflowData[i].id===this.state.workflowItemSelectedId) {
+				console.log('IIIII',workflowData[i].id,' -> ' ,workflowData[i].properties);
+				workflowData[i].properties[0].selected = value; 
 			}
-		});
+		}
 		this.setState({
 			workflowData
-		})
+		})*/
+		let properties = this.state.workflowData[0].properties[0];
+		
+		//let workflowData = this.state.workflowData;
+		/**/
+		
+		properties.selected = value;
+		/*for(let i=0; i<workflowData.length; i++){
+			if(workflowData[i].id===this.state.workflowItemSelectedId) {
+				workflowData[i].properties = properties;
+				console.log('UUUUUUU:',workflowData[i].id,' -> ' ,workflowData[i].properties);
+			}
+		}
+		console.log('????????????????????',properties);*/
+		console.log('$$$$$$$$$$$$$$$',properties);
+		//workflowData[0].properties[0].selected = value;
+		
+
+
 	}
 
 	componentDidMount(){
@@ -352,13 +371,31 @@ class WorkflowTemplateEditor extends Component {
 		)
 	}
 
-	saveWorkflow = () => {
-		let workflow = this.props.workflow;
-		workflow.modelUI.workflowData=this.state.workflowData;
-		console.log('********** save workflow ',workflow);
+	handleSave = (event) => {
+        event.preventDefault();
+        
+        let workflow = this.props.workflow;
+        workflow.modelUI.workflowData=this.state.workflowData;
+        
+        let workflowDef = {
+            code: workflow.code,
+            name: workflow.name,
+            description: workflow.description,
+            createdBy: workflow.createdBy,
+            modelUI: workflow.modelUI,
+            nodes: []
+        };
+
+        if(workflow._id)
+            workflowDef._id = workflow._id;
+        
+        console.log('%%%%%%%%%%%%%%%%%%%%% save workflowDef', workflowDef);
+    
+        //this.props.saveWorkflow(workflowDef);
 	}
 
 	render() {
+		console.log(this.state.workflowData);
 		return (
 			<div>
 				<div className="container">
@@ -371,7 +408,7 @@ class WorkflowTemplateEditor extends Component {
 									className = "itemBlock"
 									style = {{backgroundColor: block.attribute.bgcolor}}
 								>
-									{block.name} {block.id}
+									{block.name}
 								</div>
 								)
 							})
@@ -392,7 +429,7 @@ class WorkflowTemplateEditor extends Component {
 							</WorkflowProperties>
 						</div>
 						<div>
-							<button onClick={()=>{this.saveWorkflow()}}>Save Workflow</button>
+							<button onClick={this.handleSave}>Save</button>
 						</div>
 					</div>
 				</div>

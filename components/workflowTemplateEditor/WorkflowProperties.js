@@ -38,6 +38,7 @@ class WorkflowProperties extends Component {
 	render() {
 		const workflowItem = this.props.workflowItem;
 		const propertiesValues = workflowItem.properties;
+		console.log(propertiesValues);
 		return (
 			<div>
 				<div>Name:{workflowItem.name}</div>
